@@ -91,7 +91,7 @@ public class AdvancementInfo
                         }
                     }
                 }
-                translation = key;
+                translation = ModHelpers.formatAsTitleCase(key);
             }
             result.add(new AdvancementStep(translation, obtained, details));
         }
