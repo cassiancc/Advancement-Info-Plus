@@ -1,6 +1,8 @@
 package cc.cassian.advancementinfo.helpers;
 
+import com.google.gson.JsonElement;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.client.resource.language.I18n;
 
 public class ModHelpers {
 
@@ -19,6 +21,23 @@ public class ModHelpers {
             }
         }
         return newText.toString();
+    }
+
+    public static String toKey(JsonElement entry) {
+        return entry.toString().replace(':', '.').replace("\"", "");
+    }
+
+    public static String fallback(JsonElement entry) {
+        String key = toKey(entry);
+        if (I18n.hasTranslation("item."+key)) {
+            return I18n.translate("item."+key);
+        }
+        if (I18n.hasTranslation("block."+key)) {
+            return I18n.translate("block."+key);
+        }
+        else {
+            return formatAsTitleCase(entry.toString());
+        }
     }
 
     @ExpectPlatform

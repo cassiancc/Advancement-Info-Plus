@@ -4,6 +4,7 @@ import cc.cassian.advancementinfo.accessors.AdvancementProgressAccessor;
 import cc.cassian.advancementinfo.accessors.AdvancementScreenAccessor;
 import cc.cassian.advancementinfo.accessors.AdvancementWidgetAccessor;
 import cc.cassian.advancementinfo.helpers.ModHelpers;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.util.ArrayList;
@@ -90,8 +91,29 @@ public class AdvancementInfo
                             details.add(I18n.translate("effect."+entry.getKey().replace(':', '.')));
                         }
                     }
+                    JsonElement maybeItems = o.get("items");
+                    if (maybeItems instanceof JsonArray items) {
+                        JsonObject deeperItems = items.get(0).getAsJsonObject();
+                        if (deeperItems.get("items") instanceof JsonArray display) {
+                            details = new ArrayList<>(display.size());
+                            for (JsonElement entry: display) {
+                                key = ModHelpers.toKey(entry);
+                                final var item = "item."+key;
+                                final var block = "block."+key;
+                                if (I18n.hasTranslation(item)) {
+                                    details.add(I18n.translate(item));
+                                }
+                                else if (I18n.hasTranslation(block)) {
+                                    details.add(I18n.translate(block));
+                                }
+                            }
+                            translation = ModHelpers.fallback(display.get(0));
+                        }
+
+                    }
                 }
-                translation = ModHelpers.formatAsTitleCase(key);
+                if (translation == null)
+                    translation = ModHelpers.formatAsTitleCase(key);
             }
             result.add(new AdvancementStep(translation, obtained, details));
         }
