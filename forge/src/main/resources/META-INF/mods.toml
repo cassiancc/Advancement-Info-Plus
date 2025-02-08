@@ -5,7 +5,7 @@ license = "MIT"
 [[mods]]
 modId = "advancementinfo"
 version = "${version}"
-displayName = "AdvancementInfo Plus"
+displayName = "Advancement Info Plus"
 authors = "cassiancc"
 description = '''
 Show more information about advancement requirements, a port of AdvancementInfo to Architectury.
