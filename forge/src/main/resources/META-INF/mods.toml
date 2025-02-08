@@ -1,0 +1,30 @@
+modLoader = "javafml"
+loaderVersion = "[43,)"
+license = "MIT"
+
+[[mods]]
+modId = "advancementinfo"
+version = "${version}"
+displayName = "AdvancementInfo Plus"
+authors = "cassiancc"
+description = '''
+Show more information about advancement requirements, a port of AdvancementInfo to Architectury.
+'''
+logoFile = "icon.png"
+issueTrackerURL = "https://github.com/cassiancc/Advancement-Info-Plus/issues"
+displayURL="https://modrinth.com/mod/advancementinfo+"
+modURL="https://modrinth.com/mod/advancementinfo+"
+
+[[dependencies.advancementinfo]]
+modId = "forge"
+mandatory = true
+versionRange = "[43,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.advancementinfo]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19.1,)"
+ordering = "NONE"
+side = "BOTH"

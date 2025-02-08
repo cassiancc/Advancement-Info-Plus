@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "package": "cc.cassian.advancementinfo.mixin",
+    "minVersion": "0.6",
+    "client": [
+        "AdvancementScreenMixin", "AdvancementTabMixin", "AdvancementWidgetMixin",
+        "AdvancementProgressMixin", "AdvancementTabTypeMixin", "AdvancementDisplayMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}
