@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.JsonPrimitive;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
@@ -84,32 +85,53 @@ public class AdvancementInfo
                 CriterionConditions conditions = ((AdvancementProgressAccessor)(progress)).getCriterion(s).getConditions();
                 if (conditions != null) {
                     JsonObject o = conditions.toJson(AdvancementEntityPredicateSerializer.INSTANCE);
+                    details = new ArrayList<>();
                     JsonElement maybeEffects = o.get("effects");
                     if (maybeEffects instanceof JsonObject effects) {
-                        details = new ArrayList<>(effects.entrySet().size());
                         for (Map.Entry<String, JsonElement> entry: effects.entrySet()) {
                             details.add(I18n.translate("effect."+entry.getKey().replace(':', '.')));
                         }
                     }
-                    JsonElement maybeItems = o.get("items");
-                    if (maybeItems instanceof JsonArray items) {
-                        JsonObject deeperItems = items.get(0).getAsJsonObject();
-                        if (deeperItems.get("items") instanceof JsonArray display) {
-                            details = new ArrayList<>(display.size());
-                            for (JsonElement entry: display) {
-                                key = ModHelpers.toKey(entry);
-                                final var item = "item."+key;
-                                final var block = "block."+key;
-                                if (I18n.hasTranslation(item)) {
-                                    details.add(I18n.translate(item));
-                                }
-                                else if (I18n.hasTranslation(block)) {
-                                    details.add(I18n.translate(block));
-                                }
-                            }
-                            translation = ModHelpers.fallback(display.get(0));
+                    if (details.isEmpty()) {
+                        JsonElement maybeBlock = o.get("block");
+                        if (maybeBlock instanceof JsonPrimitive && maybeBlock.getAsJsonPrimitive().isString()) {
+                            details.add(ModHelpers.fallback(maybeBlock));
                         }
-
+                    }
+                    if (details.isEmpty()) {
+                        JsonElement maybeItems = o.get("items");
+                        if (maybeItems instanceof JsonArray items) {
+                            JsonObject deeperItems = items.get(0).getAsJsonObject();
+                            if (deeperItems.get("items") instanceof JsonArray display) {
+                                for (JsonElement entry: display) {
+                                    key = ModHelpers.toKey(entry);
+                                    final var item = "item."+key;
+                                    final var block = "block."+key;
+                                    if (I18n.hasTranslation(item)) {
+                                        details.add(I18n.translate(item));
+                                    }
+                                    else if (I18n.hasTranslation(block)) {
+                                        details.add(I18n.translate(block));
+                                    }
+                                }
+                                translation = ModHelpers.fallback(display.get(0));
+                            }
+                            if (deeperItems.get("tag") instanceof JsonArray display) {
+                                for (JsonElement entry: display) {
+                                    key = ModHelpers.toKey(entry);
+                                    final var tag = "tag."+key;
+                                    details.add(I18n.translate(tag));
+                                }
+                                translation = ModHelpers.fallback(display.get(0));
+                            }
+                            else if (deeperItems.get("tag") instanceof JsonPrimitive) {
+                                var tag = deeperItems.get("tag");
+                                details.add(ModHelpers.fallback(tag, "tag.item."));
+                            }
+                        }
+                    }
+                    if (details.isEmpty()) {
+                        System.out.println(o);
                     }
                 }
                 if (translation == null)
