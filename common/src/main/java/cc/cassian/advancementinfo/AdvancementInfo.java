@@ -92,47 +92,82 @@ public class AdvancementInfo
                             details.add(I18n.translate("effect."+entry.getKey().replace(':', '.')));
                         }
                     }
-                    if (details.isEmpty()) {
-                        JsonElement maybeBlock = o.get("block");
-                        if (maybeBlock instanceof JsonPrimitive && maybeBlock.getAsJsonPrimitive().isString()) {
-                            details.add(ModHelpers.fallback(maybeBlock));
+                    JsonElement maybeBlock = o.get("block");
+                    if (maybeBlock instanceof JsonPrimitive && maybeBlock.getAsJsonPrimitive().isString()) {
+                        details.add(ModHelpers.fallback(maybeBlock));
+                    }
+
+                    JsonElement maybeItems = o.get("items");
+                    if (maybeItems instanceof JsonArray items) {
+                        JsonObject deeperItems = items.get(0).getAsJsonObject();
+                        if (deeperItems.get("items") instanceof JsonArray display) {
+                            for (JsonElement entry: display) {
+                                key = ModHelpers.toKey(entry);
+                                final var item = "item."+key;
+                                final var block = "block."+key;
+                                if (I18n.hasTranslation(item)) {
+                                    details.add(I18n.translate(item));
+                                }
+                                else if (I18n.hasTranslation(block)) {
+                                    details.add(I18n.translate(block));
+                                }
+                            }
+                            translation = ModHelpers.fallback(display.get(0));
+                        }
+                        if (deeperItems.get("tag") instanceof JsonArray display) {
+                            for (JsonElement entry: display) {
+                                key = ModHelpers.toKey(entry);
+                                final var tag = "tag."+key;
+                                details.add(I18n.translate(tag));
+                            }
+                            translation = ModHelpers.fallback(display.get(0));
+                        }
+                        else if (deeperItems.get("tag") instanceof JsonPrimitive) {
+                            var tag = deeperItems.get("tag");
+                            details.add(ModHelpers.fallback(tag, "tag.item."));
                         }
                     }
-                    if (details.isEmpty()) {
-                        JsonElement maybeItems = o.get("items");
-                        if (maybeItems instanceof JsonArray items) {
-                            JsonObject deeperItems = items.get(0).getAsJsonObject();
-                            if (deeperItems.get("items") instanceof JsonArray display) {
+
+                    JsonElement maybeItem = o.get("item");
+                    if (maybeItem instanceof JsonObject items) {
+                        if (items.get("items") instanceof JsonArray display) {
+                            for (JsonElement entry: display) {
+                                key = ModHelpers.toKey(entry);
+                                final var item = "item."+key;
+                                final var block = "block."+key;
+                                if (I18n.hasTranslation(item)) {
+                                    details.add(I18n.translate(item));
+                                }
+                                else if (I18n.hasTranslation(block)) {
+                                    details.add(I18n.translate(block));
+                                }
+                            }
+                            translation = ModHelpers.fallback(display.get(0));
+                        }
+                    }
+
+                    JsonElement maybeLocation = o.get("location");
+                    if (maybeLocation instanceof JsonObject location) {
+                        if (location.get("block") instanceof JsonObject object) {
+                            JsonElement tag = object.get("tag");
+
+                            if (tag instanceof JsonArray display) {
                                 for (JsonElement entry: display) {
                                     key = ModHelpers.toKey(entry);
-                                    final var item = "item."+key;
-                                    final var block = "block."+key;
-                                    if (I18n.hasTranslation(item)) {
-                                        details.add(I18n.translate(item));
-                                    }
-                                    else if (I18n.hasTranslation(block)) {
-                                        details.add(I18n.translate(block));
-                                    }
+                                    details.add(I18n.translate("tag."+key));
                                 }
                                 translation = ModHelpers.fallback(display.get(0));
                             }
-                            if (deeperItems.get("tag") instanceof JsonArray display) {
-                                for (JsonElement entry: display) {
-                                    key = ModHelpers.toKey(entry);
-                                    final var tag = "tag."+key;
-                                    details.add(I18n.translate(tag));
-                                }
-                                translation = ModHelpers.fallback(display.get(0));
-                            }
-                            else if (deeperItems.get("tag") instanceof JsonPrimitive) {
-                                var tag = deeperItems.get("tag");
+                            else if (tag instanceof JsonPrimitive) {
                                 details.add(ModHelpers.fallback(tag, "tag.item."));
                             }
                         }
                     }
-                    if (details.isEmpty()) {
-                        System.out.println(o);
-                    }
+
+
+//                    if (details.isEmpty()) {
+//                        System.out.println(o);
+//                    }
                 }
                 if (translation == null)
                     translation = ModHelpers.formatAsTitleCase(key);
