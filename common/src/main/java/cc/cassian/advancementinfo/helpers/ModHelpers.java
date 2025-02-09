@@ -27,7 +27,7 @@ public class ModHelpers {
     }
 
     public static String toKey(JsonElement entry) {
-        return entry.toString().replace(':', '.').replace("\"", "");
+        return entry.toString().replace(':', '.').replace("/",".").replace("\"", "");
     }
 
     public static String fallback(JsonElement entry) {

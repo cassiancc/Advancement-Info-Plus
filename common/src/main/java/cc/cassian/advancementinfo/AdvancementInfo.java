@@ -165,9 +165,9 @@ public class AdvancementInfo
                     }
 
 
-//                    if (details.isEmpty()) {
-//                        System.out.println(o);
-//                    }
+                    if (details.isEmpty()) {
+                        System.out.println(o);
+                    }
                 }
                 if (translation == null)
                     translation = ModHelpers.formatAsTitleCase(key);
