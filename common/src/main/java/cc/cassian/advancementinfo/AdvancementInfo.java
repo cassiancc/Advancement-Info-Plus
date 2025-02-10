@@ -164,6 +164,19 @@ public class AdvancementInfo
                         }
                     }
 
+                    JsonElement maybeEntity = o.get("entity");
+                    if (maybeEntity instanceof JsonArray array) {
+                        maybeEntity = array.get(0);
+                    }
+                    if (maybeEntity instanceof JsonObject entity) {
+                        if (entity.get("predicate") instanceof JsonObject object) {
+                            JsonElement tag = object.get("type");
+                            if (tag instanceof JsonPrimitive) {
+                                details.add(ModHelpers.fallback(tag, "entity."));
+                            }
+                        }
+                    }
+
 
                     if (details.isEmpty()) {
                         System.out.println(o);
