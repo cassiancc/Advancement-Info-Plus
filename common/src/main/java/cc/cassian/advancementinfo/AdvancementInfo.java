@@ -189,6 +189,10 @@ public class AdvancementInfo
                                 if (structure instanceof JsonPrimitive) {
                                     details.add(ModHelpers.fallback(structure, "structure."));
                                 }
+                                var dimension = oLocation.get("dimension");
+                                if (dimension instanceof JsonPrimitive) {
+                                    details.add(ModHelpers.fallback(structure, "dimension."));
+                                }
                             }
 
                         }
@@ -196,7 +200,7 @@ public class AdvancementInfo
 
 
                     if (details.isEmpty()) {
-//                        System.out.println(o);
+                        details = ModHelpers.createMultilineTranslation(o.toString());
                     }
                 }
                 if (translation == null)
