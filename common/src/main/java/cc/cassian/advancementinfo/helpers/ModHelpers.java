@@ -52,13 +52,14 @@ public class ModHelpers {
     }
 
     public static String fallback(JsonElement entry, String prefix) {
-        String key = toKey(entry);
-        if (I18n.hasTranslation(prefix+key)) {
-            return I18n.translate(prefix+key);
+        if (entry != null) {
+            String key = toKey(entry);
+            if (I18n.hasTranslation(prefix+key))
+                return I18n.translate(prefix+key);
+            else
+                return formatAsTitleCase(entry.toString());
         }
-        else {
-            return formatAsTitleCase(entry.toString());
-        }
+        return "";
     }
 
     public static ArrayList<String> createMultilineTranslation(String loreKey) {
