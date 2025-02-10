@@ -191,15 +191,20 @@ public class AdvancementInfo
                                 }
                                 var dimension = oLocation.get("dimension");
                                 if (dimension instanceof JsonPrimitive) {
-                                    details.add(ModHelpers.fallback(structure, "dimension."));
+                                    details.add(ModHelpers.fallback(dimension, "dimension."));
                                 }
                                 var biome = oLocation.get("biome");
                                 if (biome instanceof JsonPrimitive) {
-                                    details.add(ModHelpers.fallback(structure, "biome."));
+                                    details.add(ModHelpers.fallback(biome, "biome."));
                                 }
                             }
 
                         }
+                    }
+
+                    var to = o.get("to");
+                    if (to instanceof JsonPrimitive) {
+                        details.add(ModHelpers.fallback(to, "dimension."));
                     }
 
 
