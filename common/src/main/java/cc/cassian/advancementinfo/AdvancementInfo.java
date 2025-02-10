@@ -170,16 +170,33 @@ public class AdvancementInfo
                     }
                     if (maybeEntity instanceof JsonObject entity) {
                         if (entity.get("predicate") instanceof JsonObject object) {
-                            JsonElement tag = object.get("type");
-                            if (tag instanceof JsonPrimitive) {
-                                details.add(ModHelpers.fallback(tag, "entity."));
+                            JsonElement type = object.get("type");
+                            if (type instanceof JsonPrimitive) {
+                                details.add(ModHelpers.fallback(type, "entity."));
                             }
+                        }
+                    }
+
+                    JsonElement maybePlayer = o.get("player");
+                    if (maybePlayer instanceof JsonArray array) {
+                        maybePlayer = array.get(0);
+                    }
+                    if (maybePlayer instanceof JsonObject entity) {
+                        if (entity.get("predicate") instanceof JsonObject object) {
+                            JsonElement location = object.get("location");
+                            if (location instanceof JsonObject oLocation) {
+                                var structure = oLocation.get("structure");
+                                if (structure instanceof JsonPrimitive) {
+                                    details.add(ModHelpers.fallback(structure, "structure."));
+                                }
+                            }
+
                         }
                     }
 
 
                     if (details.isEmpty()) {
-                        System.out.println(o);
+//                        System.out.println(o);
                     }
                 }
                 if (translation == null)
