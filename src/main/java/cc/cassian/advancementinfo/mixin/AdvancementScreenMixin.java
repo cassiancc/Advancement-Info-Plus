@@ -15,6 +15,8 @@ import cc.cassian.advancementinfo.IteratorReceiver;
 import cc.cassian.advancementinfo.accessors.AdvancementScreenAccessor;
 import cc.cassian.advancementinfo.accessors.AdvancementWidgetAccessor;
 import net.minecraft.advancement.Advancement;
+//? if >1.19.3
+/*import net.minecraft.client.gui.DrawContext;*/
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.advancement.AdvancementTab;
 import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
@@ -24,6 +26,7 @@ import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,9 +42,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(AdvancementsScreen.class)
 public abstract class AdvancementScreenMixin extends Screen implements AdvancementScreenAccessor {
-    
+
     public AdvancementScreenMixin() { super(null); }
-    
+
     @Unique
     private int advancement_info_plus$scrollPos;
     @Unique
@@ -50,16 +53,16 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
     private TextFieldWidget advancement_info_plus$search;
     @Shadow @Final private ClientAdvancementManager advancementHandler;
     @Shadow protected abstract AdvancementTab getTab(Advancement advancement);
-    
+
     @ModifyConstant(method="render", constant=@Constant(intValue = 252), require=1)
     private int getRenderLeft(int orig) { return width - config.marginX*2; }
-    
+
     @ModifyConstant(method="render", constant=@Constant(intValue = 140), require=1)
     private int getRenderTop(int orig) { return height - config.marginY*2; }
 
     @ModifyConstant(method="mouseClicked", constant=@Constant(intValue = 252), require=1)
     private int getMouseLeft(int orig) { return width - config.marginX*2; }
-    
+
     @ModifyConstant(method="mouseClicked", constant=@Constant(intValue = 140), require=1)
     private int getMouseTop(int orig) { return height - config.marginY*2; }
 
@@ -69,8 +72,14 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
     @ModifyConstant(method="drawAdvancementTree", constant=@Constant(intValue = 113), require = 1)
     private int getAdvTreeYSize(int orig) { return height - config.marginY*2 - 3*9; }
 
+
+    //? if >1.19.3 {
+    /*@Redirect(method = "drawWindow", at=@At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
+    public void disableDefaultDraw(DrawContext instance, Identifier texture, int x, int y, int u, int v, int width, int height) {
+        *///?} else {
     @Redirect(method = "drawWindow", at=@At(value = "INVOKE", target = "net/minecraft/client/gui/screen/advancement/AdvancementsScreen.drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
     public void disableDefaultDraw(AdvancementsScreen instance, MatrixStack matrices, int x, int y, int u, int v, int width, int height) {
+    //?}
         // do nothing
     }
 
@@ -80,12 +89,26 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
         this.advancement_info_plus$search = new TextFieldWidget(textRenderer, width-config.marginX- advancement_info_plus$currentInfoWidth +9, config.marginY+18, advancement_info_plus$currentInfoWidth -18, 17, ScreenTexts.EMPTY);
     }
     
+    //? if >1.19.3 {
+    /*@Inject(method="render",
+            at=@At(value="INVOKE",
+                    target="Lnet/minecraft/client/gui/screen/advancement/AdvancementsScreen;drawWindow(Lnet/minecraft/client/gui/DrawContext;II)V"))
+    public void renderRightFrameBackground(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        *///?} else {
     @Inject(method="render",
             at=@At(value="INVOKE",
                     target="net/minecraft/client/gui/screen/advancement/AdvancementsScreen.drawWindow(Lnet/minecraft/client/util/math/MatrixStack;II)V"))
     public void renderRightFrameBackground(MatrixStack stack, int x, int y, float delta, CallbackInfo ci) {
+
+    //?}
+        // do nothing
+
         if(advancement_info_plus$currentInfoWidth == 0) return;
-        fill(stack, 
+        //? if >1.19.3
+        /*context.*/
+        fill(
+                //? if <1.19.3
+                stack,
                 width-config.marginX- advancement_info_plus$currentInfoWidth +4, config.marginY+4,
                 width-config.marginX-4, height-config.marginY-4, 0xffc0c0c0);
     }
