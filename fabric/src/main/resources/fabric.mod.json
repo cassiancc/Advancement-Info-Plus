@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "${id}",
+  "id": "advancementinfo",
   "version": "${version}",
   "name": "${name}",
   "description": "Show more information about advancement requirements, a port of AdvancementInfo to Architectury.",
@@ -16,7 +16,7 @@
     "issues": "https://github.com/cassiancc/Advancement-Info-Plus/issues"
   },
   "license": "MIT",
-  "icon": "assets/${id}/icon.png",
+  "icon": "assets/advancementinfo/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [

@@ -1,6 +1,7 @@
 package cc.cassian.advancementinfo.helpers;
 
 import com.google.gson.JsonElement;
+import com.ibm.icu.impl.Assert;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.resource.language.I18n;
 
@@ -102,6 +103,11 @@ public class ModHelpers {
 
     @ExpectPlatform
     public static boolean clothConfigInstalled() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static boolean isDevelopment() {
         throw new AssertionError();
     }
 }

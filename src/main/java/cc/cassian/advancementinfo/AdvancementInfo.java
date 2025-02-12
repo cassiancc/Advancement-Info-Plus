@@ -17,6 +17,7 @@ import com.google.gson.JsonPrimitive;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
+import net.minecraft.SharedConstants;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.criterion.CriterionConditions;
@@ -215,7 +216,7 @@ public class AdvancementInfo
                     }
 
 
-                    if (details.isEmpty()) {
+                    if (details.isEmpty() && ModHelpers.isDevelopment()) {
                         details = ModHelpers.createMultilineTranslation(o.toString());
                     }
                 }

@@ -225,26 +225,26 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
             //? if >1.20 {
             /*DrawContext context,
             *///?} else {
-            MatrixStack stack,
+            MatrixStack context,
              //?}
             int x, int y, CallbackInfo ci) {
 
         if(advancement_info_plus$currentInfoWidth == 0) return;
-        textRenderer.draw(stack, I18n.translate("advancementinfo.infopane"), width-config.marginX- advancement_info_plus$currentInfoWidth +8, y+6, 4210752);
-        advancement_info_plus$search.renderButton(stack, x, y, 0);
-
-
-
         //? if >1.20 {
-        /*var arg = context;
-        *///?} else {
-        var arg = stack;
-         //?}
+        /*context.drawText(textRenderer,
+                *///?} else {
+                textRenderer.draw(stack,
+                 //?}
+        I18n.translate("advancementinfo.infopane"), width-config.marginX- advancement_info_plus$currentInfoWidth +8, y+6, 4210752
+                //? if >1.20
+                /*, false*/
+        );
+        advancement_info_plus$search.renderButton(context, x, y, 0);
 
         if (AdvancementInfo.mouseClicked != null) {
-            advancement_info_plus$renderCriteria(arg, AdvancementInfo.mouseClicked);
+            advancement_info_plus$renderCriteria(context, AdvancementInfo.mouseClicked);
         } else if (AdvancementInfo.mouseOver != null || AdvancementInfo.cachedClickList != null) {
-            advancement_info_plus$renderCriteria(arg, AdvancementInfo.mouseOver);
+            advancement_info_plus$renderCriteria(context, AdvancementInfo.mouseOver);
         }
     }
     
