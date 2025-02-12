@@ -204,7 +204,14 @@ public class AdvancementInfo
 
                     var to = o.get("to");
                     if (to instanceof JsonPrimitive) {
-                        details.add(ModHelpers.fallback(to, "dimension."));
+                        key = ModHelpers.fallback(to, "dimension.");
+                        details.add(key);
+                    }
+
+                    var loot_table = o.get("loot_table");
+                    if (loot_table instanceof JsonPrimitive) {
+                        key = ModHelpers.fallback(loot_table, "loot_table.");
+                        details.add(key);
                     }
 
 

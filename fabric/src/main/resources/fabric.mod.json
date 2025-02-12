@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "advancementinfo",
+  "id": "${id}",
   "version": "${version}",
-  "name": "Advancement Info Plus",
+  "name": "${name}",
   "description": "Show more information about advancement requirements, a port of AdvancementInfo to Architectury.",
   "authors": [
     "cassiancc"
@@ -11,12 +11,12 @@
     "Giselbaer"
   ],
   "contact": {
-  "homepage": "https://modrinth.com/mod/advancementinfo+",
-  "sources": "https://github.com/cassiancc/Advancement-Info-Plus",
-  "issues": "https://github.com/cassiancc/Advancement-Info-Plus/issues"
-},
+    "homepage": "https://modrinth.com/mod/advancementinfo+",
+    "sources": "https://github.com/cassiancc/Advancement-Info-Plus",
+    "issues": "https://github.com/cassiancc/Advancement-Info-Plus/issues"
+  },
   "license": "MIT",
-  "icon": "assets/advancementinfo/icon.png",
+  "icon": "assets/${id}/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
@@ -31,10 +31,9 @@
   ],
   "accessWidener": "advancementinfo.accesswidener",
   "depends": {
-    "fabricloader": ">=0.16.2",
-    "minecraft": "~1.19",
-    "java": ">=17",
-    "fabric-api": "*"
+    "fabricloader": ">=0.15",
+    "fabric-api": "*",
+    "minecraft": "${minecraft}"
   },
   "suggests": {
     "cloth-config": "*",
