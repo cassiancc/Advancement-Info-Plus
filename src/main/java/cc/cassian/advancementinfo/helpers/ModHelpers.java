@@ -125,7 +125,10 @@ public class ModHelpers {
 
     //? if >1.21 {
     /*public static void drawTexture(Identifier texture, int x, int y, int u, int v, int width, int height, DrawContext that) {
-        that.drawTexture(RenderLayer::getGuiTextured, texture, x, y, u, v, width, height, 256, 256);
+        that.drawTexture(
+                //? if >1.21.3
+                /^RenderLayer::getGuiTextured,^/
+                texture, x, y, u, v, width, height, 256, 256);
     }*///?}
 
 

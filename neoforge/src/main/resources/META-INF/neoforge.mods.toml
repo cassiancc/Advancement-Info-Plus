@@ -15,3 +15,5 @@ issueTrackerURL = "https://github.com/cassiancc/Advancement-Info-Plus/issues"
 displayURL="https://modrinth.com/mod/advancementinfo+"
 modURL="https://modrinth.com/mod/advancementinfo+"
 
+[[mixins]]
+config = "advancementinfo.mixins.json"

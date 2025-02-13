@@ -84,11 +84,13 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
     @ModifyConstant(method="drawAdvancementTree", constant=@Constant(intValue = 113), require = 1)
     private int getAdvTreeYSize(int orig) { return height - config.marginY*2 - 3*9; }
 
-
-    //? if >1.20 {
+    //? if >1.21.3 {
     /*@Redirect(method = "drawWindow", at=@At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V"))
     public void disableDefaultDraw(DrawContext instance, Function<Identifier, RenderLayer> function, Identifier identifier, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
-        *///?} else {
+    *///?} elif >1.21 {
+    /*@Redirect(method = "drawWindow", at=@At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
+    public void disableDefaultDraw(DrawContext instance, Identifier texture, int x, int y, int u, int v, int width, int height) {
+    *///?} else {
     @Redirect(method = "drawWindow", at=@At(value = "INVOKE", target = "net/minecraft/client/gui/screen/advancement/AdvancementsScreen.drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
     public void disableDefaultDraw(AdvancementsScreen instance, MatrixStack matrices, int x, int y, int u, int v, int width, int height) {
     //?}
@@ -129,7 +131,13 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
     //? if >1.20 {
     /*@Inject(method="drawWindow",
             at=@At(value="INVOKE",
-                    target="Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V"))
+                    target=
+                            //? if <1.21.3 {
+                            "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"
+                            //?} else
+                            /^"Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V"^/
+
+            ))
     public void renderFrames(DrawContext context, int x, int y, CallbackInfo ci) {
         *///?} else {
         @Inject(method="drawWindow",
