@@ -3,10 +3,17 @@ package cc.cassian.advancementinfo.helpers;
 import com.google.gson.JsonElement;
 import com.ibm.icu.impl.Assert;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+//? if >1.21
+/*import net.minecraft.client.gui.DrawContext;*/
+import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ModHelpers {
 
@@ -110,4 +117,17 @@ public class ModHelpers {
     public static boolean isDevelopment() {
         throw new AssertionError();
     }
+
+    //? if <1.21 {
+    public static void drawTexture(MatrixStack stack, int x, int y, int u, int v, int width, int height, AdvancementsScreen that) {
+        that.drawTexture(stack, x, y, u,v,width,height);
+    }//?}
+
+    //? if >1.21 {
+    /*public static void drawTexture(Identifier texture, int x, int y, int u, int v, int width, int height, DrawContext that) {
+        that.drawTexture(RenderLayer::getGuiTextured, texture, x, y, u, v, width, height, 256, 256);
+    }*///?}
+
+
+
 }

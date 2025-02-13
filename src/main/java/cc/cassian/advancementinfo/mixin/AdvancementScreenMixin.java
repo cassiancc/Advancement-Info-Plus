@@ -8,12 +8,14 @@ package cc.cassian.advancementinfo.mixin;
 
 import static cc.cassian.advancementinfo.AdvancementInfo.config;
 import java.util.List;
+import java.util.function.Function;
 
 import cc.cassian.advancementinfo.AdvancementInfo;
 import cc.cassian.advancementinfo.AdvancementStep;
 import cc.cassian.advancementinfo.IteratorReceiver;
 import cc.cassian.advancementinfo.accessors.AdvancementScreenAccessor;
 import cc.cassian.advancementinfo.accessors.AdvancementWidgetAccessor;
+import cc.cassian.advancementinfo.helpers.ModHelpers;
 import net.minecraft.advancement.Advancement;
 //? if >1.20
 /*import net.minecraft.advancement.PlacedAdvancement;*/
@@ -25,6 +27,7 @@ import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientAdvancementManager;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
@@ -83,8 +86,8 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
 
 
     //? if >1.20 {
-    /*@Redirect(method = "drawWindow", at=@At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
-    public void disableDefaultDraw(DrawContext instance, Identifier texture, int x, int y, int u, int v, int width, int height) {
+    /*@Redirect(method = "drawWindow", at=@At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V"))
+    public void disableDefaultDraw(DrawContext instance, Function<Identifier, RenderLayer> function, Identifier identifier, int x, int y, float u, float v, int width, int height, int textureWidth, int textureHeight) {
         *///?} else {
     @Redirect(method = "drawWindow", at=@At(value = "INVOKE", target = "net/minecraft/client/gui/screen/advancement/AdvancementsScreen.drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
     public void disableDefaultDraw(AdvancementsScreen instance, MatrixStack matrices, int x, int y, int u, int v, int width, int height) {
@@ -126,7 +129,7 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
     //? if >1.20 {
     /*@Inject(method="drawWindow",
             at=@At(value="INVOKE",
-                    target="Lnet/minecraft/client/gui/DrawContext;drawTexture(Lnet/minecraft/util/Identifier;IIIIII)V"))
+                    target="Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V"))
     public void renderFrames(DrawContext context, int x, int y, CallbackInfo ci) {
         *///?} else {
         @Inject(method="drawWindow",
@@ -164,23 +167,23 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
         /*var that = context;
         var texture = WINDOW_TEXTURE;
         *///?} else {
-        var that = this;
+        AdvancementsScreen that = (AdvancementsScreen) (Object) this;
         var texture = stack;
          //?}
 
-        that.drawTexture(texture, x, y, 0, 0, halfW-clipXl, halfH-clipYl); // top left
-        that.drawTexture(texture, rightQuadX, y, halfW+clipXh, 0, halfW-clipXh, halfH-clipYl); // top right
-        that.drawTexture(texture, x, bottomQuadY, 0, halfH+clipYh, halfW-clipXl, halfH-clipYh); // bottom left
-        that.drawTexture(texture, rightQuadX, bottomQuadY, halfW+clipXh, halfH+clipYh, halfW-clipXh, halfH-clipYh); // bottom right
+        ModHelpers.drawTexture(texture, x, y, 0, 0, halfW-clipXl, halfH-clipYl, that); // top left
+        ModHelpers.drawTexture(texture, rightQuadX, y, halfW+clipXh, 0, halfW-clipXh, halfH-clipYl, that); // top right
+        ModHelpers.drawTexture(texture, x, bottomQuadY, 0, halfH+clipYh, halfW-clipXl, halfH-clipYh, that); // bottom left
+        ModHelpers.drawTexture(texture, rightQuadX, bottomQuadY, halfW+clipXh, halfH+clipYh, halfW-clipXh, halfH-clipYh, that); // bottom right
 
         // draw borders
         advancement_info_plus$iterate(x+halfW-clipXl, rightQuadX, 200, (pos, len) -> {
-            that.drawTexture(texture, pos, y, 15, 0, len, halfH); // top
-            that.drawTexture(texture, pos, bottomQuadY, 15, halfH+clipYh, len, halfH-clipYh); // bottom
+            ModHelpers.drawTexture(texture, pos, y, 15, 0, len, halfH, that); // top
+            ModHelpers.drawTexture(texture, pos, bottomQuadY, 15, halfH+clipYh, len, halfH-clipYh, that); // bottom
         });
         advancement_info_plus$iterate(y+halfH-clipYl, bottomQuadY, 100, (pos, len) -> {
-            that.drawTexture(texture, x, pos, 0, 25, halfW, len); // left
-            that.drawTexture(texture, rightQuadX, pos, halfW+clipXh, 25, halfW-clipXh, len); // right
+            ModHelpers.drawTexture(texture, x, pos, 0, 25, halfW, len, that); // left
+            ModHelpers.drawTexture(texture, rightQuadX, pos, halfW+clipXh, 25, halfW-clipXh, len, that); // right
         });
 
         if(advancement_info_plus$currentInfoWidth == 0) return;
@@ -188,16 +191,16 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
         // draw info corners
         int infoWl = (int) (iw/2.);
         int infoWh = (int) (iw/2.+0.5);
-        that.drawTexture(texture, width-config.marginX - iw    , y,0, 0, infoWh, halfH); //
-        that.drawTexture(texture, width-config.marginX - infoWl, y, screenW-infoWl, 0, infoWl, halfH);
-        that.drawTexture(texture, width-config.marginX - iw    , bottomQuadY, 0, halfH, infoWh, halfH);
-        that.drawTexture(texture, width-config.marginX - infoWl, bottomQuadY, screenW-infoWl, halfH, infoWl, halfH);
+        ModHelpers.drawTexture(texture, width-config.marginX - iw    , y,0, 0, infoWh, halfH, that); //
+        ModHelpers.drawTexture(texture, width-config.marginX - infoWl, y, screenW-infoWl, 0, infoWl, halfH, that);
+        ModHelpers.drawTexture(texture, width-config.marginX - iw    , bottomQuadY, 0, halfH, infoWh, halfH, that);
+        ModHelpers.drawTexture(texture, width-config.marginX - infoWl, bottomQuadY, screenW-infoWl, halfH, infoWl, halfH, that);
 
         // draw info borders
         // Note: If the info box is too wide there would be missing top & bottom borders
         advancement_info_plus$iterate(halfH+config.marginY, bottomQuadY, 100, (pos, len) -> {
-            that.drawTexture(texture, width-config.marginX - iw, pos,0, 25, iw/2, len); // left
-            that.drawTexture(texture, width-config.marginX - iw/2, pos, screenW-iw/2, 25, iw/2, len); // right
+            ModHelpers.drawTexture(texture, width-config.marginX - iw, pos,0, 25, iw/2, len, that); // left
+            ModHelpers.drawTexture(texture, width-config.marginX - iw/2, pos, screenW-iw/2, 25, iw/2, len, that); // right
         });
     }
 

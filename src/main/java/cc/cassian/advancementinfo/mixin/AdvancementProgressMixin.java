@@ -25,7 +25,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AdvancementProgress.class)
 public class AdvancementProgressMixin
         //? if <1.21
-        implements AdvancementProgressAccessor {
+        implements AdvancementProgressAccessor 
+    {
 
     @Unique
     private
