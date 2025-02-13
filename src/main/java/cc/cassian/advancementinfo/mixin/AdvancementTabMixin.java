@@ -6,7 +6,8 @@
 package cc.cassian.advancementinfo.mixin;
 
 import cc.cassian.advancementinfo.AdvancementInfo;
-import net.minecraft.client.gui.DrawContext;
+//? if >1.21
+/*import net.minecraft.client.gui.DrawContext;*/
 import net.minecraft.client.gui.screen.advancement.AdvancementTab;
 import net.minecraft.client.gui.screen.advancement.AdvancementsScreen;
 import net.minecraft.client.util.math.MatrixStack;

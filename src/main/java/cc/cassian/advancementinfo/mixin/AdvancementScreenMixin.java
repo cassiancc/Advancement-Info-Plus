@@ -16,6 +16,8 @@ import cc.cassian.advancementinfo.accessors.AdvancementScreenAccessor;
 import cc.cassian.advancementinfo.accessors.AdvancementWidgetAccessor;
 import net.minecraft.advancement.Advancement;
 //? if >1.20
+/*import net.minecraft.advancement.PlacedAdvancement;*/
+//? if >1.21
 /*import net.minecraft.client.gui.DrawContext;*/
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.advancement.AdvancementTab;
@@ -52,7 +54,12 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
     @Unique
     private TextFieldWidget advancement_info_plus$search;
     @Shadow @Final private ClientAdvancementManager advancementHandler;
-    @Shadow protected abstract AdvancementTab getTab(Advancement advancement);
+    @Shadow protected abstract AdvancementTab getTab(
+            //? if >1.21 {
+            /*PlacedAdvancement advancement
+            *///?} else
+            Advancement advancement
+    );
 
     @Shadow @Final private static Identifier WINDOW_TEXTURE;
 
@@ -233,13 +240,18 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
         //? if >1.20 {
         /*context.drawText(textRenderer,
                 *///?} else {
-                textRenderer.draw(stack,
+                textRenderer.draw(context,
                  //?}
         I18n.translate("advancementinfo.infopane"), width-config.marginX- advancement_info_plus$currentInfoWidth +8, y+6, 4210752
                 //? if >1.20
                 /*, false*/
         );
-        advancement_info_plus$search.renderButton(context, x, y, 0);
+        advancement_info_plus$search.
+                //? if >1.21 {
+                /*renderWidget
+                 *///?} else
+                renderButton
+                (context, x, y, 0);
 
         if (AdvancementInfo.mouseClicked != null) {
             advancement_info_plus$renderCriteria(context, AdvancementInfo.mouseClicked);
@@ -270,16 +282,26 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
     }
     
     @Inject(method="onRootAdded", at=@At("HEAD"))
-    public void debugRootAdded(Advancement root, CallbackInfo ci) {
+    public void debugRootAdded(
+            //? if >1.21 {
+            /*PlacedAdvancement advancement
+            *///?} else
+            Advancement advancement
+            , CallbackInfo ci) {
         // System.out.println("root added to screen; display="+root.getDisplay()+", id="+root.getId().toString());
     }
     
     // @Inject(method="mouseScrolled", at=@At("HEAD"), cancellable = true)
     @Override
-    public boolean mouseScrolled(double X, double Y, double amount /*, CallbackInfoReturnable cir */) {
+    public boolean mouseScrolled(double X, double Y,
+             //? if >1.21 {
+             /*double horizontalAmount, double amount
+             *///?} else
+             double amount
+             /*, CallbackInfoReturnable cir */) {
         if (amount > 0 && advancement_info_plus$scrollPos > 0) {
             advancement_info_plus$scrollPos--;
-        } else if (amount < 0 && AdvancementInfo.cachedClickList != null 
+        } else if (amount < 0 && AdvancementInfo.cachedClickList != null
                 && advancement_info_plus$scrollPos < AdvancementInfo.cachedClickListLineCount - ((height-2*config.marginY-45)/textRenderer.fontHeight - 1)) {
             advancement_info_plus$scrollPos++;
         }
@@ -385,7 +407,12 @@ public abstract class AdvancementScreenMixin extends Screen implements Advanceme
         return advancementHandler;
     }
     
-    public AdvancementTab advancement_info_plus$myGetTab(Advancement advancement) {
+    public AdvancementTab advancement_info_plus$myGetTab(
+            //? if >1.21 {
+            /*PlacedAdvancement advancement
+            *///?} else
+            Advancement advancement
+            ) {
         return getTab(advancement);
     }
 }

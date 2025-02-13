@@ -12,5 +12,5 @@ import net.minecraft.advancement.AdvancementCriterion;
  * @author gbl
  */
 public interface AdvancementProgressAccessor {
-    public AdvancementCriterion getCriterion(String name);
+    AdvancementCriterion advancement_info_plus$getCriteria(String name);
 }

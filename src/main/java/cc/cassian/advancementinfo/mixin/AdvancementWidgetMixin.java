@@ -8,7 +8,8 @@ package cc.cassian.advancementinfo.mixin;
 import cc.cassian.advancementinfo.AdvancementInfo;
 import cc.cassian.advancementinfo.accessors.AdvancementWidgetAccessor;
 import net.minecraft.advancement.AdvancementProgress;
-import net.minecraft.client.gui.DrawContext;
+//? if >1.21
+/*import net.minecraft.client.gui.DrawContext;*/
 import net.minecraft.client.gui.screen.advancement.AdvancementWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
